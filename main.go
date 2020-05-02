@@ -43,8 +43,12 @@ func main() {
 	}
 
 	var mountpoints gfs.Mountpoints
-	if flag.Arg(2) != "" && flag.Arg(1) != "" {
-		mountpoints = gfs.Mountpoints{flag.Arg(2): flag.Arg(1)}
+	if flag.Arg(1) != "" {
+		if flag.Arg(2) != "" {
+			mountpoints = gfs.Mountpoints{flag.Arg(2): flag.Arg(1)}
+		} else {
+			mountpoints = gfs.Mountpoints{flag.Arg(1): "/"}
+		}
 	} else {
 		mountpoints = cfg.Mountpoints
 	}

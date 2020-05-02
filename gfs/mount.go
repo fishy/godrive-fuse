@@ -70,6 +70,10 @@ func MountAll(client *drive.Service, mounts Mountpoints) {
 			tc.Logger.Warnw("Unable to find mount_from, skipping...", "err", err)
 			continue
 		}
+		if dir == "/" {
+			tc.Logger.Errorw("Mounting root google drive currently not supported")
+			continue
+		}
 		server, err := Mount(tc, id, to)
 		if err != nil {
 			tc.Logger.Errorw("Unable to mount", "err", err)
