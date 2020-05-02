@@ -42,11 +42,18 @@ func main() {
 		log.Fatalw("Unable to retrieve Drive client", "err", err)
 	}
 
+	var mountpoints gfs.Mountpoints
+	if flag.Arg(2) != "" && flag.Arg(1) != "" {
+		mountpoints = gfs.Mountpoints{flag.Arg(2): flag.Arg(1)}
+	} else {
+		mountpoints = cfg.Mountpoints
+	}
+
 	switch cmd {
 	default:
 		flag.Usage()
 		return
 	case "mount":
-		gfs.MountAll(srv, gfs.Mountpoints{flag.Arg(2): flag.Arg(1)})
+		gfs.MountAll(srv, mountpoints)
 	}
 }

@@ -54,8 +54,10 @@ Commands:
   init:
 	Initialize the config file before first use.
 
-  mount <drive-directory> <local-directory>:
+  mount [<drive-directory> <local-directory>]:
 	Mount the specified Drive directory to the local directory.
+	If no additional args are given, map all mountpoints defined
+	in the config file instead.
 
 Args:
 `,

@@ -9,6 +9,8 @@ import (
 
 	"github.com/reddit/baseplate.go/log"
 	yaml "gopkg.in/yaml.v2"
+
+	"github.com/fishy/godrive-fuse/gfs"
 )
 
 // ConfigFilename is the filename used under root config directory.
@@ -27,6 +29,8 @@ type Config struct {
 	OAuthClient OAuthClientConfig `yaml:"oauth_client"`
 
 	HTTPClient HTTPClientConfig `yaml:"http_client"`
+
+	Mountpoints gfs.Mountpoints `yaml:"mountpoints"`
 }
 
 // ParseConfig parses content read from config file.
@@ -94,6 +98,12 @@ http_client:
   # See https://pkg.go.dev/time?tab=doc#ParseDuration for more info.
   # Default is 5s
   timeout:
+
+# A string -> string map of mountpoints.
+# Keys are local directories, and values are google drive directories.
+mountpoints:
+  # Uncomment the next line to mount your whole google drive to /tmp/drive:
+  #/tmp/drive: /
 `
 
 // In this file we cannot use baseplate log yet, so use this function to panic
