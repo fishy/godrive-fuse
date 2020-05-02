@@ -37,7 +37,14 @@ func Mount(tc gdrive.TracedClient, rootID string, to string) (*Mountpoint, error
 			tc: tc,
 		},
 	}
-	server, err := fs.Mount(to, root, nil)
+	server, err := fs.Mount(to, root, &fs.Options{
+		MountOptions: fuse.MountOptions{
+			FsName: "godrive-fuse",
+		},
+
+		UID: uint32(os.Getuid()),
+		GID: uint32(os.Getgid()),
+	})
 	if err != nil {
 		return nil, err
 	}

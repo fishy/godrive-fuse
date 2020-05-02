@@ -15,7 +15,3 @@ Currently supported features:
 - rmdir
 - mkdir
 - create new files
-
-There are some weird permission warnings when trying to rm or rmdir
-(but it still works),
-and overwriting an existing file fails for likely similar reasons.

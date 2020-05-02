@@ -147,11 +147,14 @@ func (dn *dirNode) loadCache(ctx context.Context, name string) (entry *filesCach
 		},
 		`name = '`+name+`'`,
 	)
-	if err != nil || entry == nil {
+	if err != nil {
 		dn.commonNode.tc.Logger.Warnw(
 			"ListFiles failed",
 			"err", err,
 		)
+		return nil
+	}
+	if entry == nil {
 		return nil
 	}
 	return
@@ -376,9 +379,9 @@ type fileNode struct {
 
 var (
 	_ fs.NodeOpener    = (*fileNode)(nil)
-	_ fs.FileGetattrer = (*fileNode)(nil)
+	_ fs.NodeGetattrer = (*fileNode)(nil)
+	_ fs.NodeSetattrer = (*fileNode)(nil)
 	_ fs.FileReader    = (*fileNode)(nil)
-	_ fs.FileSetattrer = (*fileNode)(nil)
 	_ fs.FileWriter    = (*fileNode)(nil)
 	_ fs.FileFlusher   = (*fileNode)(nil)
 )
@@ -392,10 +395,40 @@ func (fn *fileNode) Open(ctx context.Context, flags uint32) (fh fs.FileHandle, f
 	return fn, flags, 0
 }
 
-func (fn *fileNode) Getattr(ctx context.Context, out *fuse.AttrOut) syscall.Errno {
+func (fn *fileNode) Getattr(ctx context.Context, _ fs.FileHandle, out *fuse.AttrOut) syscall.Errno {
+	fn.commonNode.tc.Logger.Debugw(
+		"Getattr called",
+		"id", fn.commonNode.id,
+	)
+
 	fn.loadCache(ctx)
 	if fn.entry == nil {
 		return syscall.ENOENT
+	}
+	fn.entry.SetAttr(&out.Attr)
+	return 0
+}
+
+func (fn *fileNode) Setattr(ctx context.Context, _ fs.FileHandle, in *fuse.SetAttrIn, out *fuse.AttrOut) syscall.Errno {
+	fn.commonNode.tc.Logger.Debugw(
+		"Setattr called",
+		"id", fn.commonNode.id,
+		"in", *in,
+	)
+
+	fn.lock.Lock()
+	defer fn.lock.Unlock()
+
+	if size, ok := in.GetSize(); ok {
+		fn.resize(ctx, int(size))
+		if fn.buffer == nil {
+			return syscall.EREMOTEIO
+		}
+	}
+
+	fn.loadCache(ctx)
+	if fn.entry == nil {
+		return syscall.EREMOTEIO
 	}
 	fn.entry.SetAttr(&out.Attr)
 	return 0
@@ -445,31 +478,6 @@ func (fn *fileNode) resize(ctx context.Context, size int) {
 		fn.buffer.ReadFrom(io.LimitReader(nullReader{}, int64(size-fn.buffer.Len())))
 		return
 	}
-}
-
-func (fn *fileNode) Setattr(ctx context.Context, in *fuse.SetAttrIn, out *fuse.AttrOut) syscall.Errno {
-	fn.commonNode.tc.Logger.Debugw(
-		"Setattr called",
-		"id", fn.commonNode.id,
-		"in", *in,
-	)
-
-	fn.lock.Lock()
-	defer fn.lock.Unlock()
-
-	if size, ok := in.GetSize(); ok {
-		fn.resize(ctx, int(size))
-		if fn.buffer == nil {
-			return syscall.EREMOTEIO
-		}
-	}
-
-	fn.loadCache(ctx)
-	if fn.entry == nil {
-		return syscall.EREMOTEIO
-	}
-	fn.entry.SetAttr(&out.Attr)
-	return 0
 }
 
 func (fn *fileNode) Write(ctx context.Context, data []byte, off int64) (written uint32, errno syscall.Errno) {
