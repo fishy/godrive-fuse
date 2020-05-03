@@ -435,6 +435,13 @@ func (fn *fileNode) Setattr(ctx context.Context, _ fs.FileHandle, in *fuse.SetAt
 }
 
 func (fn *fileNode) Read(ctx context.Context, dest []byte, off int64) (fuse.ReadResult, syscall.Errno) {
+	fn.commonNode.tc.Logger.Debugw(
+		"Read called",
+		"id", fn.commonNode.id,
+		"buf size", len(dest),
+		"off", off,
+	)
+
 	fn.lock.Lock()
 	defer fn.lock.Unlock()
 
@@ -447,6 +454,9 @@ func (fn *fileNode) Read(ctx context.Context, dest []byte, off int64) (fuse.Read
 	if off < int64(fn.buffer.Len()) {
 		size = fn.buffer.Len() - int(off)
 		copy(dest, fn.buffer.Bytes()[off:])
+		if size > len(dest) {
+			size = len(dest)
+		}
 	}
 	return fuse.ReadResultData(dest[:size]), 0
 }
