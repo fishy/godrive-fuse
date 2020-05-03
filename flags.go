@@ -22,10 +22,10 @@ var (
 		"default",
 		"If you have more than one google account, use this to contrrol which account to use",
 	)
-	dummy = flag.Bool(
-		"dummy",
+	noDaemon = flag.Bool(
+		"no-daemon",
 		false,
-		"dummy flag",
+		"By default mount command is run in daemon mode, use this flag to disable that behavior and run it in foreground instead",
 	)
 )
 

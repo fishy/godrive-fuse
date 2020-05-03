@@ -30,6 +30,8 @@ type Config struct {
 
 	HTTPClient HTTPClientConfig `yaml:"http_client"`
 
+	Daemon DaemonConfig `yaml:"daemon"`
+
 	Mountpoints gfs.Mountpoints `yaml:"mountpoints"`
 }
 
@@ -98,6 +100,17 @@ http_client:
   # See https://pkg.go.dev/time?tab=doc#ParseDuration for more info.
   # Default is 5s
   timeout:
+
+# Daemon related configs, controls how to run daemon when mounting
+daemon:
+  # The directory to put log and pid files for the daemon.
+  # Default is $XDG_DATA_HOME/godrive-fuse,
+  # and default of $XDG_DATA_HOME is $HOME/.local/share.
+  dir:
+  # When starting new daemon,
+  # also cleanup old pid and log files that's created N days ago.
+  # Default is 0 (don't cleanup anything).
+  cleanup_days:
 
 # A string -> string map of mountpoints.
 # Keys are local directories, and values are google drive directories.

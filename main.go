@@ -58,6 +58,12 @@ func main() {
 		flag.Usage()
 		return
 	case "mount":
-		gfs.MountAll(srv, mountpoints)
+		child, d := runDaemon(cfg.Daemon)
+		if child {
+			if d != nil {
+				defer d.Release()
+			}
+			gfs.MountAll(srv, mountpoints)
+		}
 	}
 }
