@@ -89,7 +89,7 @@ func MountAll(client *drive.Service, mounts Mountpoints) {
 		}(server)
 	}
 
-	runtimebp.HandleShutdown(
+	go runtimebp.HandleShutdown(
 		context.Background(),
 		func(sig os.Signal) {
 			log.Infow("Unmounting all...", "signal", sig)
@@ -106,5 +106,6 @@ func MountAll(client *drive.Service, mounts Mountpoints) {
 			wg.Wait()
 		},
 	)
+
 	wg.Wait()
 }
