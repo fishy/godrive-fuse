@@ -10,7 +10,7 @@ import (
 	"github.com/reddit/baseplate.go/log"
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/fishy/godrive-fuse/gfs"
+	"go.yhsif.com/godrive-fuse/gfs"
 )
 
 // ConfigFilename is the filename used under root config directory.

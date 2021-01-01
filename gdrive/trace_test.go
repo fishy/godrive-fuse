@@ -4,7 +4,7 @@ import (
 	"testing"
 	"testing/quick"
 
-	"github.com/fishy/godrive-fuse/gdrive"
+	"go.yhsif.com/godrive-fuse/gdrive"
 )
 
 func TestTraceID(t *testing.T) {

@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/api/drive/v3"
 
-	"github.com/fishy/godrive-fuse/gdrive"
+	"go.yhsif.com/godrive-fuse/gdrive"
 )
 
 // Mountpoints defines a mapping from local mount directory to Drive directory

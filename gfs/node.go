@@ -14,7 +14,7 @@ import (
 	lru "github.com/hashicorp/golang-lru"
 	"google.golang.org/api/drive/v3"
 
-	"github.com/fishy/godrive-fuse/gdrive"
+	"go.yhsif.com/godrive-fuse/gdrive"
 )
 
 // The number of entries for the files cache.

@@ -6,7 +6,7 @@ import (
 
 	"github.com/reddit/baseplate.go/randbp"
 
-	"github.com/fishy/godrive-fuse/gdrive"
+	"go.yhsif.com/godrive-fuse/gdrive"
 )
 
 func BenchmarkCRC64(b *testing.B) {

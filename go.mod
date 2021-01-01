@@ -1,6 +1,6 @@
-module github.com/fishy/godrive-fuse
+module go.yhsif.com/godrive-fuse
 
-go 1.14
+go 1.15
 
 require (
 	github.com/getsentry/sentry-go v0.6.1 // indirect

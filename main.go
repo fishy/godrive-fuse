@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/api/drive/v3"
 
-	"github.com/fishy/godrive-fuse/gfs"
+	"go.yhsif.com/godrive-fuse/gfs"
 )
 
 func main() {
